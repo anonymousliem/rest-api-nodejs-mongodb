@@ -14,6 +14,7 @@ import axios from 'axios';
 import $ from 'jquery';
 import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
+import {urlTugas} from '../Constant'
 const moment = require('moment');
 
 class Tables extends Component {
@@ -51,7 +52,7 @@ class Tables extends Component {
 
     axios({
       method: 'get',
-      url: 'http://localhost:5000/exercises/' + tugasId,
+      url: urlTugas + '/' + tugasId,
       headers: Header,
     })
       .then(data => {
@@ -83,7 +84,7 @@ handlesubmitUpdate = () => {
 
   axios({
     method: 'post',
-    url: 'http://localhost:5000/exercises/update/' + this.state.idTugas,
+    url: urlTugas + '/update/' + this.state.idTugas,
     headers: Headers,
     data : Data
   })
@@ -113,7 +114,7 @@ handlesubmitUpdate = () => {
 
     axios({
       method: 'post',
-      url: 'http://localhost:5000/exercises/add',
+      url: urlTugas +  '/add',
       headers: Headers,
       data : Data
     })
@@ -195,7 +196,7 @@ handlesubmitUpdate = () => {
 
     axios({
       method: 'get',
-      url: 'http://localhost:5000/exercises/',
+      url: urlTugas,
       headers: Header,
     })
       .then(data => {
@@ -269,7 +270,7 @@ handlesubmitUpdate = () => {
     };
     axios({
       method: 'delete',
-      url: 'http://localhost:5000/exercises/' + tugasId,
+      url:  urlTugas + '/' + tugasId,
       headers: Header,
     })
       .then(data => {
