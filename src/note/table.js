@@ -191,14 +191,17 @@ handlesubmitUpdate = () => {
      // accept: 'application/json',
       //Authorization : `Bearer ` + value,
       // 'Content-Type' : 'application/json-patch+json'
-      'Content-Type' : 'application/json'
+      'Content-Type' : 'application/json',
+      
     };
 
-    axios({
-      method: 'get',
-      url: urlTugas,
-      headers: Header,
-    })
+    // axios({
+    //   method: 'get',
+    //   url: urlTugas,
+    //   headers: Header,
+    //   "params": { "username": 'muslim'} 
+    // })
+    axios.get(urlTugas, {headers: Header, params:{"username":"MUSLIM"}}, )
       .then(data => {
         console.log(data.data)
         this.setState({
