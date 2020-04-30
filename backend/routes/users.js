@@ -24,12 +24,13 @@ router.route('/add').post((req, res) => {
 
 
 router.post(
-  "/signup",
+  "/register",
   [
+    check("name", "Please Enter a Valid Name").not().isEmpty(),
+    check("role", "Please Enter a Valid role").not().isEmpty(),
     check("username", "Please Enter a Valid Username")
       .not()
       .isEmpty(),
-    check("email", "Please enter a valid email").isEmail(),
     check("password", "Please enter a valid password").isLength({
       min: 6
     })
@@ -42,12 +43,10 @@ router.post(
       });
     }
 
-    const { username, email, password } = req.body;
+    const { username, password, name, role } = req.body;
     try {
-      let user = await User.findOne({
-        email
-      });
-      if (user) {
+      let user = await User.findOne({username});
+      if (user)  {
         return res.status(400).json({
           msg: "User Already Exists"
         });
@@ -55,8 +54,9 @@ router.post(
 
       user = new User({
         username,
-        email,
-        password
+        password,
+        name,
+        role 
       });
 
       const salt = await bcrypt.genSalt(10);
@@ -79,7 +79,8 @@ router.post(
         (err, token) => {
           if (err) throw err;
           res.status(200).json({
-            token
+            token,
+            user
           });
         }
       );
@@ -93,7 +94,7 @@ router.post(
 router.post(
   "/login",
   [
-    check("email", "Please enter a valid email").isEmail(),
+    check("username", "Please enter a valid username").not().isEmpty(),
     check("password", "Please enter a valid password").isLength({
       min: 6
     })
@@ -107,10 +108,10 @@ router.post(
       });
     }
 
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     try {
       let user = await User.findOne({
-        email
+        username
       });
       if (!user)
         return res.status(400).json({

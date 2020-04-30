@@ -14,7 +14,7 @@ import axios from 'axios';
 import $ from 'jquery';
 import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {urlTugas} from '../Constant'
+import {urlTugas} from '../../Constant'
 const moment = require('moment');
 
 class Tables extends Component {
@@ -332,7 +332,7 @@ handlesubmitUpdate = () => {
 
     const renderPageNumbers = pageNumbers.map(number => {
       return (
-        <li
+        <li style={{backgroundColor : 'white'}}
           key={number}
           id={number}
           onClick={this.handleClick}
@@ -513,7 +513,7 @@ handlesubmitUpdate = () => {
                      </PaginationItem>
     </Pagination>
          */}
-        <ul className="pagination">{renderPageNumbers}</ul>
+        <ul className="pagination" style={{backgroundColor : 'white'}}>{renderPageNumbers}</ul>
       </div>
     );
   }
