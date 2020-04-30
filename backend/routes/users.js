@@ -22,6 +22,33 @@ router.route('/add').post((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.route('/delete/:id').delete((req, res) => {
+  User.findByIdAndDelete(req.params.id)
+    .then(() => res.json('User deleted.'))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/spesific/:id').get((req, res) => {
+  User.findById(req.params.id)
+    .then(User => res.json(User))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
+
+
+router.route('/update/:id').post((req, res) => {
+  User.findById(req.params.id)
+    .then(User => {
+      User.username = req.body.username;
+      User.name = req.body.name;
+      User.role = req.body.role;
+
+      User.save()
+        .then(() => res.json('User updated!'))
+        .catch(err => res.status(400).json('Error: ' + err));
+    })
+    .catch(err => res.status(400).json('Error: ' + err));
+});
 
 router.post(
   "/register",
@@ -61,7 +88,7 @@ router.post(
 
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(password, salt);
-
+      
       await user.save();
 
       const payload = {
