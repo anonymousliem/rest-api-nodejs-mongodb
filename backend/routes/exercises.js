@@ -2,13 +2,20 @@ const router = require('express').Router();
 let Exercise = require('../model/exercise.model');
 
 router.route('/').get((req, res) => {
-  Exercise.find({
-    // description : req.params.description,
-    username : req.query.username
-  })
-    .then(exercises => res.json(exercises))
+    Exercise.find({
+      // description : req.params.description,
+      username : req.query.username
+    })
+      .then(exercises => res.json(exercises))
+      .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/all').get((req, res) => {
+  Exercise.find()
+    .then(users => res.json(users))
     .catch(err => res.status(400).json('Error: ' + err));
 });
+
 
 router.route('/add').post((req, res) => {
   const username = req.body.username;

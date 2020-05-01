@@ -14,7 +14,7 @@ import axios from 'axios';
 import $ from 'jquery';
 import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {urlUsers} from '../../Constant'
+import {urlTugas} from '../../Constant'
 const moment = require('moment');
 
 class Tables extends Component {
@@ -32,18 +32,15 @@ class Tables extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleRegister = () => {
-    window.location.href = '/register';  
-  }
   handleClick(event) {
     this.setState({
       currentPage: Number(event.target.id),
     });
   }
 
-  updateTugas(accountId){
+  updateTugas(tugasId){
     this.setState({
-      idAccount : accountId,
+      idTugas : tugasId,
       showEdit : true
     })
 
@@ -55,15 +52,16 @@ class Tables extends Component {
 
     axios({
       method: 'get',
-      url: urlUsers + '/spesific/' + accountId,
+      url: urlTugas + '/' + tugasId,
       headers: Header,
     })
       .then(data => {
-        console.log(data.data)
+        console.log(data.data.date.substr(0,19))
         this.setState({
           "username": data.data.username,
-          "name": data.data.name,
-          "role": data.data.role,
+          "description": data.data.description,
+          "matkul": data.data.matkul,
+          "date" : data.data.date.substr(0,19)
         });
       })
       .catch(err => {
@@ -78,14 +76,15 @@ handlesubmitUpdate = () => {
     'Content-Type' : 'application/json'
   };
   const Data = {
-    "username" : this.state.username,
-    "name": this.state.name,
-    "role": this.state.role,
+    "username" : localStorage.getItem("username"),
+    "description": this.state.description,
+    "matkul": this.state.matkul,
+    "date": this.state.date,
   }
 
   axios({
     method: 'post',
-    url: urlUsers + '/update/' + this.state.idAccount,
+    url: urlTugas + '/update/' + this.state.idTugas,
     headers: Headers,
     data : Data
   })
@@ -107,7 +106,7 @@ handlesubmitUpdate = () => {
       'Content-Type' : 'application/json'
     };
     const Data = {
-      "username" : "MUSLIM",
+      "username" : localStorage.getItem("username"),
       "description": this.state.description,
       "matkul": this.state.matkul,
       "date": this.state.date,
@@ -115,7 +114,7 @@ handlesubmitUpdate = () => {
 
     axios({
       method: 'post',
-      url: urlUsers +  '/add',
+      url: urlTugas +  '/add',
       headers: Headers,
       data : Data
     })
@@ -131,9 +130,9 @@ handlesubmitUpdate = () => {
       
   }
 
-  handleName = (evt) => {
+  handleMatkul = (evt) => {
       this.setState ({
-        name : evt.target.value,
+        matkul : evt.target.value,
       });
     
   }
@@ -183,7 +182,7 @@ handlesubmitUpdate = () => {
  // };
 }
   componentDidMount() {
-
+   
       var Role = localStorage.getItem("Role")
       var status = localStorage.getItem("token");
       if(!status){
@@ -196,6 +195,9 @@ handlesubmitUpdate = () => {
           }
       }
   
+
+
+    //alert(urlBlob)
     const value = localStorage.getItem('token');
     this.setState({
       token: value,
@@ -208,13 +210,11 @@ handlesubmitUpdate = () => {
       
     };
 
-    // axios({
-    //   method: 'get',
-    //   url: urlUsers,
-    //   headers: Header,
-    //   "params": { "username": 'muslim'} 
-    // })
-    axios.get(urlUsers + '/', {headers: Header}, )
+    axios({
+      method: 'get',
+      url: urlTugas + '/all',
+      headers: Header,
+    })
       .then(data => {
         console.log(data.data)
         this.setState({
@@ -280,13 +280,13 @@ handlesubmitUpdate = () => {
     // 'startDate' and 'endDate' which are Momentjs objects.
   };
 
-  deleteAccount(accountId) {
+  deleteTugas(tugasId) {
     const Header = {
       accept: 'application/json',
     };
     axios({
       method: 'delete',
-      url:  urlUsers + '/delete/' + accountId,
+      url:  urlTugas + '/' + tugasId,
       headers: Header,
     })
       .then(data => {
@@ -310,30 +310,10 @@ handlesubmitUpdate = () => {
       return (
         <tr key={results._id} data-category={results._id}>
          <td>{results._id}</td>
-         <td>{results.name}</td>
          <td>{results.username}</td>
-         <td>{results.role}</td>
-         <td>
-            {/* <Button className="brn btn-success" onClick={() => this.approveAbsensi(results.Id)}>Approve</Button>
-            &nbsp; */}
-            <Button
-              className="btn btn-info"
-              onClick={() => this.updateTugas(results._id)}>
-              Edit
-            </Button>
-            {/* <Link
-              to={'/account/editaccount/' + results.id}
-              className="btn btn-primary">
-              Edit
-            </Link> */}
-            &nbsp;
-            <Button
-              className="btn btn-danger"
-              onClick={() => this.deleteAccount(results._id)}>
-              Delete
-            </Button>
-          </td>
-        
+         <td>{results.matkul}</td>
+         <td>{results.description}</td>
+         <td>{results.date}</td>
         </tr>
       );
     });
@@ -399,25 +379,25 @@ handlesubmitUpdate = () => {
         {/*modal edit */}
         <Modal show={this.state.showEdit} onHide={this.handleClose}>
 					<Modal.Header closeButton>
-						<Modal.Title>Edit Account</Modal.Title>
+						<Modal.Title>Edit Tugas</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
           
           <Form>
         
-          Nama
+          Nama Matkul
           <InputGroup className="mb-3">
-          <Input type="text" value={this.state.name} onChange={this.handleName} />
+          <Input type="text" value={this.state.matkul} onChange={this.handleMatkul} />
           </InputGroup>
           
-          Username
+          Description
           <InputGroup className="mb-3">
-          <Input type="text" disabled onChange={this.handleDescription} value={this.state.username} placeholder="description" autoComplete="description" />
+          <Input type="text" onChange={this.handleDescription} value={this.state.description} placeholder="description" autoComplete="description" />
           </InputGroup>
           
-          Role
+          Deadline
           <InputGroup className="mb-3">
-          <Input type="text" disabled value={this.state.role} onChange={this.handleDeadline} placeholder="deadline" autoComplete="deadline" />
+          <Input type="datetime-local" value={this.state.date} onChange={this.handleDeadline} placeholder="deadline" autoComplete="deadline" />
           </InputGroup>
 
           </Form>
@@ -466,14 +446,14 @@ handlesubmitUpdate = () => {
                   <CardHeader>
                     <Row>
                       <Col>
-                        <i className="fa fa-user" /> <b>&nbsp;List Account</b>
-                        <Button
+                        <i className="fa fa-user" /> <b>&nbsp;List All Tugas</b>
+                        {/* <Button
                           style={{ marginLeft: 10 }}
                           color="success"
                           className="px-4"
-                          onClick={this.handleRegister}>
-                          Add Account
-                        </Button>
+                          onClick={this.handleAddTugas}>
+                          Add Tugas
+                        </Button> */}
 
                   
                       </Col>
@@ -483,7 +463,7 @@ handlesubmitUpdate = () => {
                           id="myInput"
                           className="form-control form-control-md"
                           style={{ width: '100%' }}
-                          placeholder="Search By Name"
+                          placeholder="Search By Matkul"
                           onChange={this.filterList}
                         />
                       </Col>
@@ -504,10 +484,11 @@ handlesubmitUpdate = () => {
                       <thead>
                         <tr>
                           <th>ID</th> 
-                          <th>Name</th>
                           <th>Username</th>
-                          <th>Role</th>
-                          <th>Action</th>
+                          <th>Matkul</th>
+                          <th>Description</th>
+                          <th>Deadline</th>
+                          {/* <th>Action</th> */}
                         </tr>
                       </thead>
                       <tbody>{

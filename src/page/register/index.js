@@ -26,12 +26,11 @@ export default class index extends Component {
         if(!status){
             alert('harap login terlebih dahulu');
             this.props.history.push('/login');
-              
-              if(Role !== "admin" && Role !== null){
-                  alert('anda tidak punya akses ke sini');
-                  this.props.history.push('/user');
-              }
-          
+        }else{
+            if(Role !== "admin"){
+                alert('anda tidak punya akses ke sini');
+                this.props.history.push('/user');
+            }
         }
     }
 

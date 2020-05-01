@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Menu from '../../menu/menu'
 
 export default class index extends Component {
     componentDidMount(){
@@ -12,7 +13,8 @@ export default class index extends Component {
     render() {
         return (
             <div>
-                <p>ini halaman user</p>
+            <Menu />
+            <p>Halo {localStorage.getItem("username")}, anda login sebagai {localStorage.getItem("Role")} </p>
             </div>
         )
     }

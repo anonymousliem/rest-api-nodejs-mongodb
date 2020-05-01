@@ -181,7 +181,14 @@ handlesubmitUpdate = () => {
    // $('#datefilterto').on("change", filterRows);
  // };
 }
-  componentDidMount() {
+  componentDidMount() { 
+    var status = localStorage.getItem("token");
+    if(!status){
+        alert('harap login terlebih dahulu');
+        window.location.href = '/login';  
+    }
+
+
     //alert(urlBlob)
     const value = localStorage.getItem('token');
     this.setState({

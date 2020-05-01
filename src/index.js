@@ -10,6 +10,7 @@ import login from '../src/page/login/index'
 import register from '../src/page/register/index'
 import logout from '../src/page/logout/logout'
 import account from '../src/page/account/index'
+import allnotes from '../src/page/AllNote/index'
 import * as serviceWorker from './serviceWorker';
 import { Route, Link, BrowserRouter as Router, Switch } from 'react-router-dom'
 const routing = (
@@ -26,6 +27,7 @@ const routing = (
         <Route exact path="/register" component={register} />
         <Route exact path="/logout" component={logout} />
         <Route exact path="/account" component={account} />
+        <Route exact path="/allnotes" component={allnotes} />
         <Route component={Notfound} />
       </Switch>
     </div>

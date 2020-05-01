@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import Menu from '../../menu/menuadmin'
 export default class index extends Component {
     componentDidMount(){
         var Role = localStorage.getItem("Role")
@@ -17,7 +17,8 @@ export default class index extends Component {
     render() {
         return (
             <div>
-                <p>INI HALAMAN ADMIN</p>
+            <Menu />
+                <p>Halo {localStorage.getItem("username")}, anda login sebagai {localStorage.getItem("Role")} </p>
             </div>
         )
     }
